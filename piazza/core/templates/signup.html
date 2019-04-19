@@ -1,0 +1,34 @@
+{% extends 'master.html' %}
+{% block body %}
+<h1 class="title">
+    Sign Up for Piazza v1.9.2
+</h1>
+
+<p class="subtitle">
+
+    <form method="POST" action="/signup">
+        {% csrf_token %}
+        <div>
+        <input name="email" class="input is-primary" type="text" placeholder="email">
+    </div>
+</br>  
+<div>
+    <input name="username" class="input is-primary" type="text" placeholder="username">
+</div>
+</br>  
+    <div>
+        <input name="first_name" class="input is-primary" placeholder="first_name" >
+    </div>
+    </br>
+    <div>
+        <input name="last_name" class="input is-primary" placeholder="last_name" >
+    </div>
+    </br>
+    <div>
+        <input name="password" class="input is-primary" placeholder="password" type="password" />
+    </div>  
+    </br>
+        <input type="submit" class="button is-primary"/>
+    </form>
+</p>
+{% endblock %}
