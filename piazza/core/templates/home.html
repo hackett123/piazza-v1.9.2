@@ -6,5 +6,23 @@
 
 <p class="subtitle">
     <h2>You are currently logged in as <strong>{{user.first_name}}</strong>
+        </br>
+        <h2>Your Courses : </h2>
+        <p>
+            {% for course in courses%}
+            {{course.name}} </br>
+            {%endfor%}
+        </p>
+        </br>
+        <h2>
+            <a href="/join_course"> Join Course</a>
+        </h2>
+        <h2>
+            <a href="/create_course"> Create Course as Instructor</a>
+        </h2>
+        <h2>
+            <a href="/logout"> Logout</a>
+        </h2>
+
 </p>
 {% endblock %}

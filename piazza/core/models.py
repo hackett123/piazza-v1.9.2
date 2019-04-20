@@ -6,31 +6,31 @@ from django.contrib.auth.models import User
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     id = models.AutoField(primary_key=True)
-    email = models.CharField(max_length=200)
-    username = models.CharField(max_length=3, unique=True)
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
-    password = models.CharField(max_length=200)
 
     def __str__(self):
         return self.first_name, self.last_name
+
+
+class TA(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    id = models.AutoField(primary_key=True)
+
+    def __str__(self):
+        return self.first_name, self.last_name
+
 
 class Instructor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     id = models.AutoField(primary_key=True)
-    email = models.CharField(max_length=200)
-    username = models.CharField(max_length=3, unique=True)
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
-    password = models.CharField(max_length=200)
 
     def __str__(self):
         return self.first_name, self.last_name
-    
-class Followup(models.Model):
+
+
+class Folder(models.Model):
     id = models.AutoField(primary_key=True)
-    content = models.TextField(default="")
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="followup_author")
+    name = models.CharField(max_length=128, default="FOLDER NAME UNKNOWN")
+
 
 class Post(models.Model):
     id = models.AutoField(primary_key=True)
@@ -39,13 +39,25 @@ class Post(models.Model):
     is_question = models.BooleanField(default=True)
     is_private = models.BooleanField(default=False)
     good_questions = models.IntegerField(default=0)
-    followups = models.ManyToManyField(Followup, related_name="followups")
+    folder = models.ManyToManyField(Folder, related_name ="post_folders", default=0)
 
     def __str__(self):
         return self.author, " posted : ", self.content
 
-class Folder(models.Model):
-    pass
+
+class Followup(models.Model):
+    id = models.AutoField(primary_key=True)
+    content = models.TextField(default="")
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="followup_author")
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="followup_post", default=0)
+
 
 class Course(models.Model):
-    pass
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=128, default="COURSE NAME UNKNOWN")
+    instructor = models.ForeignKey(Instructor, related_name="course_instructor", on_delete=models.CASCADE, default=0)
+    students = models.ManyToManyField(Student, related_name="course_students", default=0)
+    ta_staff = models.ManyToManyField(TA, related_name="course_TAs", default=0)
+    
+    
+
