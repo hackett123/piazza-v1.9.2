@@ -4,18 +4,16 @@
     Log In
 </h1>
 
-<p class="subtitle">
-    <form method="POST" action="/login">
-        {% csrf_token %}
-        <div>
-        <input name="username" class="input is-primary" type="text" placeholder="username">
-    </div>  
+<form method="POST" action="/login">
+    {% csrf_token %}
+    <div>
+        <input name="username" class="input is-primary" type="text" placeholder="Username">
+    </div>
     </br>
     <div>
-        <input name="password" class="input is-primary" placeholder="password" type="password" />
-    </div>  
+        <input name="password" class="input is-primary" placeholder="password" type="Password" />
+    </div>
     </br>
-        <input type="submit" class="button is-primary"/>
-    </form>
-</p>
+    <input type="submit" class="button is-primary" />
+</form>
 {% endblock %}

@@ -1,0 +1,20 @@
+{% extends 'master.html' %}
+{% block body %}
+<h1 class="title">Create a Course</h1>
+<form method="POST" action="/create_course">
+    {% csrf_token %}
+    <div>
+        <input name="code" class="input is-primary" type="text" placeholder="Course Code">
+    </div>
+    </br>
+    <div>
+        <input name="name" class="input is-primary" type="text" placeholder="Course Name">
+    </div>
+    </br>
+    <div>
+        <input name="term" class="input is-primary" type="text" placeholder="Course Term">
+    </div>
+    </br>
+    <button type="submit" class="button is-primary">Create</button>
+</form>
+{% endblock %}

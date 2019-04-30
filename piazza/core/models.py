@@ -3,28 +3,28 @@ from django.contrib.auth.models import User
 
 
 # Create your models here.
-class Student(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    id = models.AutoField(primary_key=True)
+# class Student(models.Model):
+#     user = models.OneToOneField(User, on_delete=models.CASCADE)
+#     id = models.AutoField(primary_key=True)
 
-    def __str__(self):
-        return self.first_name, self.last_name
-
-
-class TA(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    id = models.AutoField(primary_key=True)
-
-    def __str__(self):
-        return self.first_name, self.last_name
+#     def __str__(self):
+#         return self.first_name, self.last_name
 
 
-class Instructor(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    id = models.AutoField(primary_key=True)
+# class TA(models.Model):
+#     user = models.OneToOneField(User, on_delete=models.CASCADE)
+#     id = models.AutoField(primary_key=True)
 
-    def __str__(self):
-        return self.first_name, self.last_name
+#     def __str__(self):
+#         return self.first_name, self.last_name
+
+
+# class Instructor(models.Model):
+#     user = models.OneToOneField(User, on_delete=models.CASCADE)
+#     id = models.AutoField(primary_key=True)
+
+#     def __str__(self):
+#         return self.first_name, self.last_name
 
 
 class Folder(models.Model):
@@ -34,6 +34,7 @@ class Folder(models.Model):
 
 class Post(models.Model):
     id = models.AutoField(primary_key=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     content = models.TextField(default="")
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="post_author", default="NULL")
     is_question = models.BooleanField(default=True)
@@ -47,6 +48,7 @@ class Post(models.Model):
 
 class Followup(models.Model):
     id = models.AutoField(primary_key=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     content = models.TextField(default="")
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="followup_author")
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="followup_post", default=0)
@@ -55,9 +57,17 @@ class Followup(models.Model):
 class Course(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=128, default="COURSE NAME UNKNOWN")
-    instructor = models.ForeignKey(Instructor, related_name="course_instructor", on_delete=models.CASCADE, default=0)
-    students = models.ManyToManyField(Student, related_name="course_students", default=0)
-    ta_staff = models.ManyToManyField(TA, related_name="course_TAs", default=0)
+    code = models.CharField(max_length=128, default="COURSE CODE UNKNOWN")
+    term = models.CharField(max_length=128, default="COURSE TERM UNKNOWN")
+    # instructor = models.ForeignKey(Instructor, related_name="course_instructor", on_delete=models.CASCADE, default=0)
+    # students = models.ManyToManyField(Student, related_name="course_students", default=0)
+    # ta_staff = models.ManyToManyField(TA, related_name="course_TAs", default=0)
+    instructor = models.ForeignKey(User, related_name="course_instructor", on_delete=models.CASCADE, default=0)
+    students = models.ManyToManyField(User, related_name="course_students", default=0)
+    ta_staff = models.ManyToManyField(User, related_name="course_TAs", default=0)
+
+    def __str__(self):
+        return self.code
     
     
 

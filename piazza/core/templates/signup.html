@@ -4,31 +4,29 @@
     Sign Up for Piazza v1.9.2
 </h1>
 
-<p class="subtitle">
 
-    <form method="POST" action="/signup">
-        {% csrf_token %}
-        <div>
-        <input name="email" class="input is-primary" type="text" placeholder="email">
-    </div>
-</br>  
-<div>
-    <input name="username" class="input is-primary" type="text" placeholder="username">
-</div>
-</br>  
+<form method="POST" action="/signup">
+    {% csrf_token %}
     <div>
-        <input name="first_name" class="input is-primary" placeholder="first_name" >
+        <input name="email" class="input is-primary" type="text" placeholder="Email">
     </div>
     </br>
     <div>
-        <input name="last_name" class="input is-primary" placeholder="last_name" >
+        <input name="username" class="input is-primary" type="text" placeholder="Username">
     </div>
     </br>
     <div>
-        <input name="password" class="input is-primary" placeholder="password" type="password" />
-    </div>  
+        <input name="first_name" class="input is-primary" placeholder="First Name">
+    </div>
     </br>
-        <input type="submit" class="button is-primary"/>
-    </form>
-</p>
+    <div>
+        <input name="last_name" class="input is-primary" placeholder="Last Name">
+    </div>
+    </br>
+    <div>
+        <input name="password" class="input is-primary" placeholder="Password" type="password" />
+    </div>
+    </br>
+    <input type="submit" class="button is-primary" />
+</form>
 {% endblock %}
