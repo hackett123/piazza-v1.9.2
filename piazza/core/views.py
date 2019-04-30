@@ -101,3 +101,16 @@ def delete_course(request):
     print("PRINTING COURSE : ", course)
     course.delete()
     return redirect('/')
+
+@login_required
+def join_course(request):
+    if request.method == "POST":
+        course_ids = request.POST.getlist("courses")
+        user = request.user
+        courses = Course.objects.filter(id__in=course_ids)
+        for course in courses:
+            course.students.add(user)
+        return redirect("/")
+    id = request.user.id
+    courses = Course.objects.exclude(students__id=id)
+    return render(request, "join_course.html", {"courses": courses})
