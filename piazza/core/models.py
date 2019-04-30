@@ -28,11 +28,11 @@ from django.contrib.auth.models import User
 
 
 class Folder(models.Model):
-    id = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True, unique=True)
     name = models.CharField(max_length=128, default="FOLDER NAME UNKNOWN")
 
 class Course(models.Model):
-    id = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True, unique=True)
     name = models.CharField(max_length=128, default="COURSE NAME UNKNOWN")
     code = models.CharField(max_length=128, default="COURSE CODE UNKNOWN")
     term = models.CharField(max_length=128, default="COURSE TERM UNKNOWN")
@@ -48,7 +48,7 @@ class Course(models.Model):
         return self.code + ": " + self.name +"[" + self.term + "]"
 
 class Post(models.Model):
-    id = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     summary = models.CharField(max_length=128)
     content = models.TextField(default="")
@@ -64,7 +64,7 @@ class Post(models.Model):
 
 
 class Followup(models.Model):
-    id = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     content = models.TextField(default="")
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="author_followups")

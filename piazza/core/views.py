@@ -62,6 +62,11 @@ def create_course(request):
             code = request.POST['code'],
             instructor = request.user
         )
+        for student in students :
+            print("STUDENT : ", student.first_name)
+        for ta in tas :
+            print("TA : ", ta.first_name)
+        print("Instructor : ", course.instructor)
         course.students.set(students)
         course.ta_staff.set(tas)
         return redirect("/course?course_id="+str(course.id))
@@ -70,7 +75,7 @@ def create_course(request):
 @login_required
 def course(request):
     course = Course.objects.get(id=request.GET["course_id"])
-    return render(request, 'course.html', {"course": course})
+    return render(request, 'course.html', {"course": course, "user": request.user})
 
 @login_required
 def create_post(request):
@@ -88,3 +93,11 @@ def create_post(request):
 def render_post_form(request):
     course = Course.objects.get(id=request.POST["course_id"])
     return render(request, 'course.html', {"course": course, "create": True})
+
+@login_required
+def delete_course(request):
+    print(request.GET.get("course_id"))
+    course = Course.objects.get(id=request.GET.get('course_id'))
+    print("PRINTING COURSE : ", course)
+    course.delete()
+    return redirect('/')

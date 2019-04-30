@@ -1,6 +1,25 @@
 {% extends 'master.html' %}
 {% block body %}
 <h1 class="title">{{course}}</h1>
+<div>
+    <p>
+        Hi {{user.first_name}}, you are logged into {{course.name}} as
+        {% if user in course.students.all %}
+        a student.
+        {% endif %}
+        {% if user in course.ta_staff.all %}
+        a TA.
+        {% endif %}
+        {% if user == course.instructor %}
+        the instructor.
+        {% endif %}
+        </br>
+        <a href="/"> Go Home</a>
+        </br>
+        <a href="/logout"> Logout</a>
+    </p>
+</div>
+</br>
 <div class="columns">
     <div class="column is-one-third post-list">
         <div class="columns">
@@ -40,5 +59,14 @@
         {% include './components/create_post.html' %}
         {% endif %}
     </div>
+</div>
+<div>
+    <h2>
+        {% if user in course.ta_staff.all or user == course.instructor %}
+        DANGER ZONE
+        </br>
+        <a href="/delete_course?course_id={{course.id}}"> DELETE COURSE </a>
+        {% endif %}
+    </h2>
 </div>
 {% endblock %}
