@@ -49,14 +49,24 @@ def signup_(request):
 @login_required
 def create_course(request):
     if request.method == "POST":
+        # https://stackoverflow.com/questions/618557/django-using-select-multiple-and-post
+        student_ids = request.POST.getlist("students")
+        ta_ids = request.POST.getlist("tas")
+        # https://stackoverflow.com/questions/6337973/get-multiple-rows-with-one-query-in-django
+        students = User.objects.filter(id__in=student_ids)
+        tas = User.objects.filter(id__in=ta_ids)
+
         course = Course.objects.create(
             name = request.POST['name'],
             term = request.POST['term'],
             code = request.POST['code'],
             instructor = request.user
         )
+        course.students.set(students)
+        course.ta_staff.set(tas)
+        
         return redirect("/course?course_id={course.id}")
-    return render(request, 'create_course.html', {})
+    return render(request, 'create_course.html', {"students": User.objects.all()})
 
 @login_required
 def course(request):

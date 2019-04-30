@@ -1,10 +1,10 @@
 from django.contrib import admin
-from core.models import Student, TA, Instructor, Folder, Post, Followup, Course
+from core.models import Folder, Post, Followup, Course
 
 # Register your models here.
-admin.site.register(Student)
-admin.site.register(TA)
-admin.site.register(Instructor)
+# admin.site.register(Student)
+# admin.site.register(TA)
+# admin.site.register(Instructor)
 admin.site.register(Folder)
 admin.site.register(Post)
 admin.site.register(Followup)

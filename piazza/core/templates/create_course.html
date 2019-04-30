@@ -15,6 +15,36 @@
         <input name="term" class="input is-primary" type="text" placeholder="Course Term">
     </div>
     </br>
+    <!-- https://select2.org/getting-started/basic-usage -->
+    <div class="select is-multiple is-primary">
+        <label>Add Students</label>
+        <select multiple size="3" name="students">
+            {% for student in students %}
+            <option value="{{student.id}}">{{student}}</option>
+            {% endfor %}
+        </select>
+    </div>
+    </br>
+    <div class="select is-multiple is-primary">
+            <label>Add TAs</label>
+            <select multiple size="3" name="students">
+                {% for student in students %}
+                <option value="{{student.id}}">{{student}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        </br>
+    </br>
+    <!-- <select class="js-example-basic-multiple" name="students[]" multiple="multiple">
+        {% for student in students %}
+        <option value="{{student.id}}">{{student}}</option>
+        {% endfor %}
+    </select> -->
     <button type="submit" class="button is-primary">Create</button>
 </form>
 {% endblock %}
+<script>
+    $(document).ready(function () {
+        $('.js-example-basic-multiple').select2();
+    });
+</script>
