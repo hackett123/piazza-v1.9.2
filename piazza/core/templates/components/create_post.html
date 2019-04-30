@@ -1,0 +1,25 @@
+<h1 class="title">Create a Post</h1>
+<form method="POST" action="/create_post">
+    {% csrf_token %}
+    <input type="hidden" value="{{course.id}}" name="course_id">
+    <div class="control">
+        <label class="radio">
+            <input type="radio" value="public" name="post_to" checked>
+            Entire Class
+        </label>
+        <label class="radio">
+            <input type="radio" value="private" name="post_to">
+            Instructor(s)
+        </label>
+    </div>
+    </br>
+    <div>
+        <input name="summary" class="input is-primary" type="text" placeholder="Enter summary...">
+    </div>
+    </br>
+    <div>
+        <textarea name="content" class="textarea is-primary"></textarea>
+    </div>
+    </br>
+    <button type="submit" class="button is-primary">Create</button>
+</form>

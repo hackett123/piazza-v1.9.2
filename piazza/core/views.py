@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from core.models import Course
+from core.models import Post, Course
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
@@ -44,7 +44,7 @@ def signup_(request):
         print(request.POST['email'])
         print(request.POST['password'])
         return redirect('/')
-    return render(request, 'signup.html', {})
+    return render(request, 'signup.html', {}) 
 
 @login_required
 def create_course(request):
@@ -64,11 +64,27 @@ def create_course(request):
         )
         course.students.set(students)
         course.ta_staff.set(tas)
-        
-        return redirect("/course?course_id={course.id}")
+        return redirect("/course?course_id="+str(course.id))
     return render(request, 'create_course.html', {"students": User.objects.all()})
 
 @login_required
 def course(request):
-    print(request.GET["course_id"]) 
-    return redirect("/")
+    course = Course.objects.get(id=request.GET["course_id"])
+    return render(request, 'course.html', {"course": course})
+
+@login_required
+def create_post(request):
+    course = Course.objects.get(id=request.POST["course_id"])
+    post = Post.objects.create(
+        summary = request.POST["summary"],
+        content = request.POST["content"],
+        is_private = request.POST.get("post_to") == "private",
+        author = request.user, 
+        course = course
+    )
+    return redirect("/course?course_id="+str(course.id))
+
+@login_required
+def render_post_form(request):
+    course = Course.objects.get(id=request.POST["course_id"])
+    return render(request, 'course.html', {"course": course, "create": True})

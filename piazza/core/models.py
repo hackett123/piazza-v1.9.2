@@ -31,29 +31,6 @@ class Folder(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=128, default="FOLDER NAME UNKNOWN")
 
-
-class Post(models.Model):
-    id = models.AutoField(primary_key=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    content = models.TextField(default="")
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="post_author", default="NULL")
-    is_question = models.BooleanField(default=True)
-    is_private = models.BooleanField(default=False)
-    good_questions = models.IntegerField(default=0)
-    folder = models.ManyToManyField(Folder, related_name ="post_folders", default=0)
-
-    def __str__(self):
-        return self.author, " posted : ", self.content
-
-
-class Followup(models.Model):
-    id = models.AutoField(primary_key=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    content = models.TextField(default="")
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="followup_author")
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="followup_post", default=0)
-
-
 class Course(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=128, default="COURSE NAME UNKNOWN")
@@ -62,12 +39,37 @@ class Course(models.Model):
     # instructor = models.ForeignKey(Instructor, related_name="course_instructor", on_delete=models.CASCADE, default=0)
     # students = models.ManyToManyField(Student, related_name="course_students", default=0)
     # ta_staff = models.ManyToManyField(TA, related_name="course_TAs", default=0)
-    instructor = models.ForeignKey(User, related_name="course_instructor", on_delete=models.CASCADE, default=0)
-    students = models.ManyToManyField(User, related_name="course_students", default=0)
-    ta_staff = models.ManyToManyField(User, related_name="course_TAs", default=0)
+    instructor = models.ForeignKey(User, related_name="instructor_courses", on_delete=models.CASCADE, default=0)
+    students = models.ManyToManyField(User, related_name="student_courses", default=0)
+    ta_staff = models.ManyToManyField(User, related_name="TA_courses", default=0)
+    # posts = models.OneToOneField(Post, on_delete=models.CASCADE, default=0)
 
     def __str__(self):
-        return self.code
+        return self.code + ": " + self.name +"[" + self.term + "]"
+
+class Post(models.Model):
+    id = models.AutoField(primary_key=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    summary = models.CharField(max_length=128)
+    content = models.TextField(default="")
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="post_author", default="NULL")
+    is_question = models.BooleanField(default=True)
+    is_private = models.BooleanField(default=False)
+    good_questions = models.IntegerField(default=0)
+    folder = models.ManyToManyField(Folder, related_name ="folder_posts", default=0)
+    course = models.ForeignKey(Course, related_name="course_posts", on_delete=models.CASCADE, default=0)
+    
+    def __str__(self):
+        return self.author.username + " posted : " + self.summary
+
+
+class Followup(models.Model):
+    id = models.AutoField(primary_key=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    content = models.TextField(default="")
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="author_followups")
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="post_followups", default=0)
+
     
     
 

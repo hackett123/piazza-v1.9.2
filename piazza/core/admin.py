@@ -1,5 +1,5 @@
 from django.contrib import admin
-from core.models import Folder, Post, Followup, Course
+from core.models import Folder, Followup, Post, Course
 
 # Register your models here.
 # admin.site.register(Student)
