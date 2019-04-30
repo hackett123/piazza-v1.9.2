@@ -4,10 +4,10 @@
 <div>
     <p>
         Hi {{user.first_name}}, you are logged into {{course.name}} as
-        {% if user in course.students.all %}
+        {% if user in course.students.all and user != course.instructor %}
         a student.
         {% endif %}
-        {% if user in course.ta_staff.all %}
+        {% if user in course.ta_staff.all and user != course.instructor %}
         a TA.
         {% endif %}
         {% if user == course.instructor %}
@@ -48,8 +48,27 @@
                         <div class="content">
                             {{post.content}}
                         </div>
+
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-footer-item">
+                            {% if user == post.author %}
+                            <div class="columns">
+                                <div class="column">
+                                    REPLY / ANSWER
+                                </div>
+                                <div class="column">
+                                    EDIT
+                                </div>
+                                <div class="column">
+                                    DELETE
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
+            </br>
                 {% endfor %}
             </div>
         </div>
