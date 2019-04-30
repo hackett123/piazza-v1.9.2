@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from core.models import Post, Course
+from core.models import Post, Course, Followup
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
@@ -114,3 +114,24 @@ def join_course(request):
     id = request.user.id
     courses = Course.objects.exclude(students__id=id)
     return render(request, "join_course.html", {"courses": courses})
+
+@login_required
+def view_post(request, course_id, post_id):
+    post = Post.objects.get(id=post_id)
+    course = Course.objects.get(id=course_id)
+    return render(request, 'course.html', {"course": course, "post": post})
+
+@login_required
+def add_followup(request):
+    content = request.POST.get("followup")
+    post_id = request.POST.get("post_id")
+    post = Post.objects.get(id=post_id)
+    
+    course_id = request.POST.get("course_id")
+    course = Course.objects.get(id=course_id)
+    followup = Followup.objects.create(
+        content = content,
+        author = request.user,
+        post = post
+    )
+    return render(request, 'course.html', {"course": course, "post": post})

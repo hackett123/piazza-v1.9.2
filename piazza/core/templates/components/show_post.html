@@ -1,0 +1,31 @@
+<div class="post card">
+    <header class="card-header">
+        <p class="card-header-title">
+            {{post.summary}}
+        </p>
+        <p>{{post.created_at}}</p>
+    </header>
+    <div class="card-content">
+        <div class="content">
+            {{post.content}}
+        </div>
+    </div>
+    <div class="card-footer">
+        <div class="card-footer-item" style="justify-content: flex-start">
+            <form method="POST" action="/add_followup">
+                {% csrf_token %}
+                <input type="hidden" value="{{post.id}}" name="post_id">
+                <input type="hidden" value="{{course.id}}" name="course_id">
+                <label>Start a new followup discussion</label>
+                <input class="input" type="text" name="followup" placeholder="Compose a new followup discussion">
+                <button type="submit" class="button is-primary">Post</button>
+            </form>
+        </div>
+        {% for followup in post.post_followups.all %}
+            <div class="card-footer-item" style="justify-content: flex-start">
+                {{followup.content}}
+                By : {{followup.author}}
+            </div>
+        {% endfor %}
+    </div>
+</div>
