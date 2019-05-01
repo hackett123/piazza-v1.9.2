@@ -161,6 +161,7 @@ def add_instructor_answer(request):
     answer = request.POST.get("answer")
 
     post.instructor_answer = answer
+    post.save()
     return render(request, 'course.html', {"course": course, "post": post})
 
 @login_required
@@ -174,4 +175,5 @@ def add_student_answer(request):
     answer = request.POST.get("answer")
 
     post.student_answer = answer
+    post.save()
     return render(request, 'course.html', {"course": course, "post": post})

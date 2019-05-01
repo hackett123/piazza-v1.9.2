@@ -8,8 +8,8 @@
 </p>
 <form method="POST" action="/join_course">
     {% csrf_token %}
-    <div class="select is-multiple">
-        <select multiple size="3" name="courses">
+    <div class="select is-multiple is-primary">
+        <select class="js-example-basic-multiple" name="courses" multiple="multiple">
             {% for course in courses %}
             <option value="{{course.id}}">{{course}}</option>
             {% endfor %}

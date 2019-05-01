@@ -17,7 +17,7 @@
     </div>
 </div>
 </br>
-{% if user == course.student %}
+{% if user in course.students.all %}
 <div class="card">
     <header class="card-header">
         <p class="card-header-title">
@@ -61,7 +61,7 @@
 </div>
 </br>
 {% endif %}
-{% if user == course.instructor %}
+{% if user == course.instructor or user in course.ta_staff.all %}
 <div class="card">
     <header class="card-header">
         <p class="card-header-title">
