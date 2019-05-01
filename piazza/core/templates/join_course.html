@@ -1,0 +1,23 @@
+{% extends 'master.html' %}
+{% block body %}
+<h1 class="title">Join a Course</h1>
+<p>
+    <a href="/"> Go Home</a>
+    </br>
+    <a href="/logout"> Logout</a>
+</p>
+<form method="POST" action="/join_course">
+    {% csrf_token %}
+    <div class="select is-multiple">
+        <select multiple size="3" name="courses">
+            {% for course in courses %}
+            <option value="{{course.id}}">{{course}}</option>
+            {% endfor %}
+        </select>
+    </div>
+    </br>
+    <button type="submit" class="button is-primary">Join</button>
+</form>
+<div>
+</div>
+{% endblock %}

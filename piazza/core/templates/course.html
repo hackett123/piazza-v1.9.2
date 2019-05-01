@@ -26,7 +26,7 @@
             <div class="column is-one-third">
                 <form method="POST" action="/render_post_form">
                     {% csrf_token %}
-                    <input value="{{course.id}}" name="course_id" style="display: none;">
+                    <input value="{{course.id}}" name="course_id" type="hidden">
                     <button class="button is-primary" type="submit">New Post</button>
                 </form>
             </div>
@@ -48,14 +48,13 @@
                         <div class="content">
                             {{post.content}}
                         </div>
-
                     </div>
                     <div class="card-footer">
                         <div class="card-footer-item">
                             {% if user == post.author %}
                             <div class="columns">
                                 <div class="column">
-                                    REPLY / ANSWER
+                                    <a href={% url 'view_post' course_id=course.id post_id=post.id %}>VIEW</a>
                                 </div>
                                 <div class="column">
                                     EDIT
@@ -76,6 +75,9 @@
     <div class="column featured">
         {% if create %}
         {% include './components/create_post.html' %}
+        {% endif %}
+        {% if post %}
+        {% include './components/show_post.html' %}
         {% endif %}
     </div>
 </div>
