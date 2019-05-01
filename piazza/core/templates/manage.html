@@ -4,62 +4,118 @@
     Piazza v1.9.2
 </h1>
 <div>
+    <a href="/"> Go Home</a>
+    </br>
+    <a href="/course?course_id={{course.id}}"> Return to Course Page</a>
+    </br>
+    <a href="/logout"> Logout</a>
+    </br>
     <p class="subtitle">
-        <a href="/"> Go Home</a>
-        </br>
-        <a href="/course?course_id={{course.id}}"> Return to Course Page</a>
-        </br>
-        <a href="/logout"> Logout</a>
-        </br>
         Welcome to the room where it happens! Manage your course here.
     </p>
-    <div class="columns">
-
-        <div class="column">
-            <form method="POST" action="/remove_students">
-                {% csrf_token %}
-                </br>
-                <!-- https://select2.org/getting-started/basic-usage -->
+    <form method="POST" action="/update_course">
+        {% csrf_token %}
+        <input type="hidden" value="{{course.id}}" name="course_id">
+        <div>
+            <input name="code" class="input is-primary" type="text" placeholder="Course Code" value="{{course.code}}">
+        </div>
+        </br>
+        <div>
+            <input name="name" class="input is-primary" type="text" placeholder="Course Name" value="{{course.name}}">
+        </div>
+        </br>
+        <div>
+            <input name="term" class="input is-primary" type="text" placeholder="Course Term" value="{{course.term}}">
+        </div>
+        <div>
+            </br>
+            <label class="label">Add folder names separated by commas</label>
+            <input name="add_folders" class="input is-primary" type="text" placeholder="e.g. hw1, hw2">
+        </div>
+        </br>
+        <div class="columns">
+            <div class="column">
                 <div class="select is-multiple is-primary">
-                    <label class="label">Remove Students</label>
-                    <select class="js-example-basic-multiple" name="students" multiple="multiple">
-                        {% for student in course_students %}
+                    <label class="label">Add Students</label>
+                    <select class="js-example-basic-multiple" name="add_students" multiple="multiple">
+                        {% for student in new_students %}
                         <option value="{{student.id}}">{{student}}</option>
-
                         {% endfor %}
-                        <input type="hidden" value="{{course.id}}" name="course_id">
                     </select>
                 </div>
                 </br>
-                <button type="submit" class="button is-primary">Remove Students</button>
-            </form>
-        </div>
-        <div class="column">
-            <form method="POST" action="/remove_tas">
-                {% csrf_token %}
+                <div class="select is-multiple is-primary">
+                    <label class="label">Add TAs</label>
+                    <select class="js-example-basic-multiple" name="add_tas" multiple="multiple">
+                        {% for ta in new_tas %}
+                        <option value="{{student.id}}">{{ta}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="column">
+                <div class="select is-multiple is-primary">
+                    <label class="label">Remove Students</label>
+                    <select class="js-example-basic-multiple" name="remove_students" multiple="multiple">
+                        {% for student in curr_students %}
+                        <option value="{{student.id}}">{{student}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
                 </br>
-                <!-- https://select2.org/getting-started/basic-usage -->
                 <div class="select is-multiple is-primary">
                     <label class="label">Remove TAs</label>
-                    <select class="js-example-basic-multiple" name="tas" multiple="multiple">
-                        {% for ta in course_tas %}
+                    <select class="js-example-basic-multiple" name="remove_tas" multiple="multiple">
+                        {% for ta in curr_tas %}
                         <option value="{{ta.id}}">{{ta}}</option>
                         {% endfor %}
                         <input type="hidden" value="{{course.id}}" name="course_id">
                     </select>
                 </div>
-                </br>
-                <button type="submit" class="button is-primary">Remove TAs</button>
-            </form>
+            </div>
+            <div class="column">
+                <div class="select is-multiple is-primary">
+                    <label class="label">Remove Folders</label>
+                    <select class="js-example-basic-multiple" name="remove_folders" multiple="multiple">
+                        {% for f in course.course_folders.all %}
+                        <option value="{{f.id}}">{{f.name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
         </div>
-    </div>
-
+        </br>
+        <button type="submit" class="button is-primary">Update</button>
+    </form>
     <div>
         <p class="subtitle">
             Course Statistics
             <div class="columns">
                 <div class="column">
                     <strong>Students</strong> : </br>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>First Name</abbr></th>
+                                <th>Last Name</abbr></th>
+                                <th>Email</abbr></th>
+                                <th>Username</abbr></th>
+                            </tr>
+                        </thead>
+                        {% for student in curr_students %}
+                        <tbody>
+                            <tr>
+                                <td>{{student.first_name}}</td>
+                                <td>{{student.last_name}}</td>
+                                <td>{{student.email}}</td>
+                                <td>{{student.username}}</td>
+                            </tr>
+                        </tbody>
+                        {% endfor %}
+                    </table>
+                </div>
+                <div class="column">
+                    <strong>TAs</strong> : </br>
 
                     <table class="table">
                         <thead>
@@ -70,41 +126,17 @@
                                 <th>Username</abbr></th>
                             </tr>
                         </thead>
-                        {% for student in course_students %}
+                        {% for ta in curr_tas %}
                         <tbody>
                             <tr>
-                                <td>{{student.first_name}}</td>
-                                <td>{{student.last_name}}</td>
-                                <td>{{student.email}}</td>
-                                <td>{{student.username}}</td>
+                                <td>{{ta.first_name}}</td>
+                                <td>{{ta.last_name}}</td>
+                                <td>{{ta.email}}</td>
+                                <td>{{ta.username}}</td>
                             </tr>
                         </tbody>
-                    {% endfor %}
-                </table>
-                </div>
-                <div class="column">
-                        <strong>TAs</strong> : </br>
-
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>First Name</abbr></th>
-                                    <th>Last Name</abbr></th>
-                                    <th>Email</abbr></th>
-                                    <th>Username</abbr></th>
-                                </tr>
-                            </thead>
-                            {% for ta in course_tas %}
-                            <tbody>
-                                <tr>
-                                    <td>{{ta.first_name}}</td>
-                                    <td>{{ta.last_name}}</td>
-                                    <td>{{ta.email}}</td>
-                                    <td>{{ta.username}}</td>
-                                </tr>
-                            </tbody>
                         {% endfor %}
-                        </table>
+                    </table>
                 </div>
             </div>
         </p>

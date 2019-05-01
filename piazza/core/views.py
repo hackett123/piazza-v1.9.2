@@ -138,9 +138,13 @@ def join_course(request):
 
 
 @login_required
-def view_post(request, course_id, post_id):
-    post = Post.objects.get(id=post_id)
+def view_post(request):
+    course_id = request.GET.get("course_id")
     course = Course.objects.get(id=course_id)
+
+    post_id = request.GET.get("post_id")
+    post = course.course_posts.get(id=post_id)
+
     return render(request, 'course.html', {"course": course, "post": post})
 
 
@@ -157,7 +161,7 @@ def add_followup(request):
         author=request.user,
         post=post
     )
-    return render(request, 'course.html', {"course": course, "post": post})
+    return redirect("/view_post?course_id="+str(course.id)+"&post_id="+str(post.id))
 
 
 @login_required
@@ -206,48 +210,122 @@ def folder(request):
 @login_required
 def manage(request):
     course = Course.objects.get(id=request.GET["course_id"])
+    # curr_tas/students, new_tas/students, folder_string
     if request.user == course.instructor:
+        new_tas = User.objects.exclude(id__in=course.ta_staff.all())
+        new_students = User.objects.exclude(id__in=course.students.all())
 
-        return render(request, 'manage.html', {"course": course, "course_students": course.students.all(),
-        "course_tas": course.ta_staff.all()})
+        folder_string = ""
+        for f in course.course_folders.all():
+            folder_string = folder_string + f.name + ", "
+        folder_string = folder_string[:len(folder_string)-2]
+        return render(request, 'manage.html', {"course": course, "curr_students": course.students.all(),
+                                               "curr_tas": course.ta_staff.all(), "new_tas": new_tas, "new_students": new_students, "folder_string": folder_string})
     return redirect("/")
 
 
 @login_required
-def remove_students(request):
-    if request.method == "POST":
-        print("REMOVING STUDENTS")
-        # https://stackoverflow.com/questions/618557/django-using-select-multiple-and-post
-        student_ids = request.POST.getlist("students")
-        # https://stackoverflow.com/questions/6337973/get-multiple-rows-with-one-query-in-django
-        students = User.objects.filter(id__in=student_ids)
+def update_course(request):
+    course = Course.objects.get(id=request.POST.get("course_id"))
+    add_students = User.objects.filter(
+        id__in=request.POST.getlist("add_students"))
+    add_tas = User.objects.filter(id__in=request.POST.getlist("add_tas"))
+    remove_students = User.objects.filter(
+        id__in=request.POST.getlist("remove_students"))
+    remove_tas = User.objects.filter(id__in=request.POST.getlist("remove_tas"))
+    remove_folders = Folder.objects.filter(
+        id__in=request.POST.getlist("remove_folders"))
 
-        course = Course.objects.get(id=request.POST.get("course_id"))
+    for student in remove_students:
+        course.students.remove(student)
+        student.delete()
 
-        for student in students:
-            course.students.remove(student)
-            course.save()
-            student.delete()
+    for ta in remove_tas:
+        course.ta_staff.remove(ta)
+        ta.delete()
 
-        return redirect("/course?course_id="+str(course.id))
-    return render(request, 'create_course.html', {"students": User.objects.all()})
+    for folder in remove_folders:
+        folder.delete()
+
+    for student in add_students:
+        course.students.add(student)
+
+    for ta in add_tas:
+        course.ta_staff.add(ta)
+
+    course.name = request.POST['name']
+    course.term = request.POST['term']
+    course.code = request.POST['code']
+
+    folder_string = request.POST['add_folders']
+    if len(folder_string) > 0:
+        folders = folder_string.split(",")
+        folders = list(map(lambda x: x.strip(), folders))
+        for f in folders:
+            Folder.objects.create(
+                name=f,
+                course=course
+            )
+
+    course.save()
+    return redirect("/course?course_id="+str(course.id))
+
 
 @login_required
-def remove_tas(request):
-    if request.method == "POST":
-        print("REMOVING TAS")
-        # https://stackoverflow.com/questions/618557/django-using-select-multiple-and-post
-        ta_ids = request.POST.getlist("tas")
-        # https://stackoverflow.com/questions/6337973/get-multiple-rows-with-one-query-in-django
-        tas = User.objects.filter(id__in=ta_ids)
+def edit_followup(request):
+    post_id = request.POST.get("post_id")
+    post = Post.objects.get(id=post_id)
 
-        course = Course.objects.get(id=request.POST.get("course_id"))
+    course_id = request.POST.get("course_id")
+    course = Course.objects.get(id=course_id)
 
-        for ta in tas:
-            course.ta_staff.remove(ta)
-            course.save()
-            ta.delete()
+    content = request.POST.get("followup")
+    followup_id = request.POST.get("followup_id")
 
-        return redirect("/course?course_id="+str(course.id))
-    return render(request, 'create_course.html', {"students": User.objects.all()})
+    followup = post.post_followups.get(id=followup_id)
+    followup.content = content
+    followup.save()
+    return redirect("/view_post?course_id="+str(course.id)+"&post_id="+str(post.id))
+
+@login_required
+def edit_post(request):
+    post_id = request.POST.get("post_id")
+    post = Post.objects.get(id=post_id)
+
+    course_id = request.POST.get("course_id")
+    course = Course.objects.get(id=course_id)
+
+    content = request.POST.get("content")
+
+    post.content = content
+    post.save()
+    return redirect("/view_post?course_id="+str(course.id)+"&post_id="+str(post.id))
+
+@login_required
+def edit_instructor_answer(request):
+    post_id = request.POST.get("post_id")
+    post = Post.objects.get(id=post_id)
+
+    course_id = request.POST.get("course_id")
+    course = Course.objects.get(id=course_id)
+
+    content = request.POST.get("content")
+
+    post.instructor_answer = content
+    post.save()
+    return redirect("/view_post?course_id="+str(course.id)+"&post_id="+str(post.id))
+
+@login_required
+def edit_student_answer(request):
+    post_id = request.POST.get("post_id")
+    post = Post.objects.get(id=post_id)
+
+    course_id = request.POST.get("course_id")
+    course = Course.objects.get(id=course_id)
+
+    content = request.POST.get("content")
+
+    post.student_answer = content
+    post.save()
+    return redirect("/view_post?course_id="+str(course.id)+"&post_id="+str(post.id))
 

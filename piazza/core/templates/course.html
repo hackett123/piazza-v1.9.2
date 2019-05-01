@@ -58,7 +58,7 @@
                         <div class="card-footer-item">
                             <div class="columns">
                                 <div class="column">
-                                    <a href={% url 'view_post' course_id=course.id post_id=post.id %}>VIEW</a>
+                                    <a href="/view_post?course_id={{course.id}}&post_id={{post.id}}">VIEW</a>
                                 </div>
                             </div>
                         </div>
@@ -84,7 +84,7 @@
                         <div class="card-footer-item">
                             <div class="columns">
                                 <div class="column">
-                                    <a href={% url 'view_post' course_id=course.id post_id=post.id %}>VIEW</a>
+                                    <a href="/view_post?course_id={{course.id}}&post_id={{post.id}}">VIEW</a>
                                 </div>
                             </div>
                         </div>
@@ -112,9 +112,10 @@
         {% endif %}
         {% if create %}
         {% include './components/create_post.html' %}
-        {% endif %}
-        {% if post %}
+        {% elif post %}
         {% include './components/show_post.html' %}
+        {% else %}
+        {% include './components/course_card.html' %}
         {% endif %}
     </div>
 </div>

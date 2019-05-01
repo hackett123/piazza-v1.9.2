@@ -21,10 +21,75 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
     <script>
+        function editFollowupModalClick(text) {
+            $("#modal_body").append(`
+            <form method="POST" action="/edit_followup" id="edit-form">
+                {% csrf_token %}
+                <input type="hidden" value="{{post.id}}" name="post_id">
+                <input type="hidden" value="{{course.id}}" name="course_id">
+                <input type="hidden" value="${followup_id}" name="followup_id">
+                <label class="label">Edit followup discussion</label>
+                <input class="input" type="text" name="followup" placeholder="Compose a new followup discussion" value='${text}'>
+            </form>`)
+            $("#edit_modal").toggleClass("is-active")
+        }
+
+        function editPostModalClick(text) {
+            $("#modal_body").append(`
+            <form method="POST" action="/edit_post" id="edit-form">
+                {% csrf_token %}
+                <input type="hidden" value="{{post.id}}" name="post_id">
+                <input type="hidden" value="{{course.id}}" name="course_id">
+                <label class="label">Edit post</label>
+                <input class="input" type="text" name="content" placeholder="Compose a new followup discussion" value='${text}'>
+            </form>`)
+            $("#edit_modal").toggleClass("is-active")
+        }
+
+        function editInstructorAnswerModalClick(text) {
+            $("#modal_body").append(`
+            <form method="POST" action="/edit_instructor_answer" id="edit-form">
+                {% csrf_token %}
+                <input type="hidden" value="{{post.id}}" name="post_id">
+                <input type="hidden" value="{{course.id}}" name="course_id">
+                <label class="label">Edit instructor answer</label>
+                <input class="input" type="text" name="content" placeholder="Edit instructor answer" value='${text}'>
+            </form>`)
+            $("#edit_modal").toggleClass("is-active")
+        }
+
+        function editStudentAnswerModalClick(text) {
+            $("#modal_body").append(`
+            <form method="POST" action="/edit_student_answer" id="edit-form">
+                {% csrf_token %}
+                <input type="hidden" value="{{post.id}}" name="post_id">
+                <input type="hidden" value="{{course.id}}" name="course_id">
+                <label class="label">Edit student answer</label>
+                <input class="input" type="text" name="content" placeholder="Edit student answer" value='${text}'>
+            </form>`)
+            $("#edit_modal").toggleClass("is-active")
+        }
+
         $(document).ready(function () {
             $('.js-example-basic-multiple').select2();
-        });
-    </script>
+
+            $("#close").click(function () {
+                $("#edit_modal").toggleClass("is-active")
+                $("#modal_body").empty()
+            })
+
+            $("#cancel").click(function () {
+                $("#edit_modal").toggleClass("is-active")
+                $("#modal_body").empty()
+            })
+
+            $("#save").click(function () {
+                $("#edit_modal").toggleClass("is-active")
+                $("#edit-form").submit()
+                $("#modal_body").empty()
+            })
+
+        });</script>
 </body>
 
 </html>

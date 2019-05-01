@@ -19,8 +19,15 @@
         <div class="card-footer-item" style="justify-content: flex-start">
             <div class="columns">
                 {% for f in post.folder.all %}
-                <div class="column"><p>{{f.name}}</p></div>
+                <div class="column">
+                    <p>{{f.name}}</p>
+                </div>
                 {% endfor %}
+                {% if user == post.author %}
+                <div class="column">
+                    <button class="button is-primary" id="edit_post" onclick="editPostModalClick('{{post.content}}')">edit</button>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -50,7 +57,7 @@
     </div>
     <div class="card-footer">
         <div class="card-footer-item" style="justify-content: flex-start">
-            EDIT
+                <button class="button is-primary" id="edit_post" onclick="editStudentAnswerModalClick('{{post.student_answer}}')">edit</button>
         </div>
     </div>
 </div>
@@ -81,6 +88,11 @@
         <div class="content">
             {% if post.instructor_answer %}
             {{post.instructor_answer}}
+            <div class="card-footer">
+                <div class="card-footer-item" style="justify-content: flex-start">
+                    <button class="button is-primary" id="edit_post" onclick="editInstructorAnswerModalClick('{{post.instructor_answer}}')">edit</button>
+                </div>
+            </div>
             {% else %}
             <form method="POST" action="/add_instructor_answer">
                 {% csrf_token %}
@@ -90,11 +102,6 @@
                 <button type="submit" class="button is-primary">Submit</button>
             </form>
             {% endif %}
-        </div>
-    </div>
-    <div class="card-footer">
-        <div class="card-footer-item" style="justify-content: flex-start">
-            EDIT
         </div>
     </div>
 </div>
@@ -125,6 +132,10 @@
         <div class="content">
             {{followup.content}}
             By : {{followup.author}}
+            {% if user == followup.author %}
+            </br>
+            <button class="button is-primary" id="edit_followup" onclick="editFollowupModalClick('{{followup.id}}', '{{followup.content}}')">edit</button>
+            {% endif %}
         </div>
         {% endfor %}
     </div>
@@ -142,3 +153,19 @@
     </div>
 </div>
 </br>
+<div class="modal" id="edit_modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Modal title</p>
+            <button class="delete" aria-label="close" id="close"></button>
+        </header>
+        <section class="modal-card-body" id="modal_body">
+
+        </section>
+        <footer class="modal-card-foot">
+            <button class="button is-primary" id="save">Save</button>
+            <button class="button" id="cancel">Cancel</button>
+        </footer>
+    </div>
+</div>
