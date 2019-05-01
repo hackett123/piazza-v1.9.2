@@ -25,7 +25,7 @@
                     <select class="js-example-basic-multiple" name="students" multiple="multiple">
                         {% for student in course_students %}
                         <option value="{{student.id}}">{{student}}</option>
-                        
+
                         {% endfor %}
                         <input type="hidden" value="{{course.id}}" name="course_id">
                     </select>
@@ -52,6 +52,62 @@
                 <button type="submit" class="button is-primary">Remove TAs</button>
             </form>
         </div>
+    </div>
+
+    <div>
+        <p class="subtitle">
+            Course Statistics
+            <div class="columns">
+                <div class="column">
+                    <strong>Students</strong> : </br>
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>First Name</abbr></th>
+                                <th>Last Name</abbr></th>
+                                <th>Email</abbr></th>
+                                <th>Username</abbr></th>
+                            </tr>
+                        </thead>
+                        {% for student in course_students %}
+                        <tbody>
+                            <tr>
+                                <td>{{student.first_name}}</td>
+                                <td>{{student.last_name}}</td>
+                                <td>{{student.email}}</td>
+                                <td>{{student.username}}</td>
+                            </tr>
+                        </tbody>
+                    {% endfor %}
+                </table>
+                </div>
+                <div class="column">
+                        <strong>TAs</strong> : </br>
+
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>First Name</abbr></th>
+                                    <th>Last Name</abbr></th>
+                                    <th>Email</abbr></th>
+                                    <th>Username</abbr></th>
+                                </tr>
+                            </thead>
+                            {% for ta in course_tas %}
+                            <tbody>
+                                <tr>
+                                    <td>{{ta.first_name}}</td>
+                                    <td>{{ta.last_name}}</td>
+                                    <td>{{ta.email}}</td>
+                                    <td>{{ta.username}}</td>
+                                </tr>
+                            </tbody>
+                        {% endfor %}
+                        </table>
+                </div>
+            </div>
+        </p>
     </div>
 
     </br>
