@@ -4,10 +4,6 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
-class Folder(models.Model):
-    id = models.AutoField(primary_key=True, unique=True)
-    name = models.CharField(max_length=128, default="FOLDER NAME UNKNOWN")
-
 class Course(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
     name = models.CharField(max_length=128, default="COURSE NAME UNKNOWN")
@@ -19,6 +15,11 @@ class Course(models.Model):
 
     def __str__(self):
         return self.code + ": " + self.name +"[" + self.term + "]"
+
+class Folder(models.Model):
+    id = models.AutoField(primary_key=True, unique=True)
+    name = models.CharField(max_length=128, default="FOLDER NAME UNKNOWN")
+    course = models.ForeignKey(Course, related_name="course_folders", on_delete=models.CASCADE, default=0)
 
 class Post(models.Model):
     id = models.AutoField(primary_key=True, unique=True)

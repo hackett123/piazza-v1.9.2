@@ -12,6 +12,14 @@
             Instructor(s)
         </label>
     </div>
+    <div class="control">
+            {% for f in course.course_folders.all %}
+            <label class="checkbox">
+                <input type="checkbox" value="{{f.id}}" name="folders">
+                {{f.name}}
+            </label>
+            {% endfor %}
+        </div>
     </br>
     <div>
         <input name="summary" class="input is-primary" type="text" placeholder="Enter summary...">

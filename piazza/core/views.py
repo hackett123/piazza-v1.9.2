@@ -1,11 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from core.models import Post, Course, Followup
+from core.models import Post, Course, Followup, Folder
 from django.contrib.auth.decorators import login_required
-
-# Create your views here.
-
 
 def splash(request):
     if request.user.is_authenticated:
@@ -75,6 +72,15 @@ def create_course(request):
         print("Instructor : ", course.instructor)
         course.students.set(students)
         course.ta_staff.set(tas)
+
+        folder_string = request.POST['folders']
+        folders = folder_string.split(",")
+        folders = list(map(lambda x: x.strip(), folders))
+        for f in folders:
+            Folder.objects.create(
+                name=f,
+                course=course
+            )
         return redirect("/course?course_id="+str(course.id))
     return render(request, 'create_course.html', {"students": User.objects.all()})
 
@@ -88,6 +94,8 @@ def course(request):
 @login_required
 def create_post(request):
     course = Course.objects.get(id=request.POST["course_id"])
+    folder_ids = request.POST.getlist("folders")
+    folders = Folder.objects.filter(id__in=folder_ids)
     post = Post.objects.create(
         summary=request.POST["summary"],
         content=request.POST["content"],
@@ -95,6 +103,7 @@ def create_post(request):
         author=request.user,
         course=course
     )
+    post.folder.set(folders)
     return redirect("/course?course_id="+str(course.id))
 
 
@@ -164,6 +173,7 @@ def add_instructor_answer(request):
     post.save()
     return render(request, 'course.html', {"course": course, "post": post})
 
+
 @login_required
 def add_student_answer(request):
     post_id = request.POST.get("post_id")
@@ -177,3 +187,19 @@ def add_student_answer(request):
     post.student_answer = answer
     post.save()
     return render(request, 'course.html', {"course": course, "post": post})
+
+@login_required
+def folder(request):
+    folder_id = request.GET.get("folder_id")
+    folder = Folder.objects.get(id=folder_id)
+
+    course_id = request.GET.get("course_id")
+    course = Course.objects.get(id=course_id)
+
+    posts = course.course_posts.filter(folder=folder)
+
+    return render(request, 'course.html', {"course": course, "filter": True, "posts": posts})
+
+
+
+

@@ -36,6 +36,33 @@
         </div>
         <div class="columns">
             <div class="column post-list">
+                {% if filter %}
+                {% for post in posts %}
+                <div class="post card">
+                    <header class="card-header">
+                        <p class="card-header-title">
+                            {{post.summary}}
+                        </p>
+                        <p>{{post.created_at}}</p>
+                    </header>
+                    <div class="card-content">
+                        <div class="content">
+                            {{post.content}}
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-footer-item">
+                            <div class="columns">
+                                <div class="column">
+                                    <a href={% url 'view_post' course_id=course.id post_id=post.id %}>VIEW</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </br>
+                {% endfor %}
+                {% else %}
                 {% for post in course.course_posts.all %}
                 <div class="post card">
                     <header class="card-header">
@@ -61,10 +88,23 @@
                 </div>
                 </br>
                 {% endfor %}
+                {% endif %}
             </div>
         </div>
     </div>
     <div class="column featured">
+        {% if course.course_folders %}
+        <div class="columns">
+            {% for f in course.course_folders.all %}
+            <div class="column is-1">
+                <a href="/folder?folder_id={{f.id}}&course_id={{course.id}}">{{f.name}}</a>
+            </div>
+            {% endfor %}
+            <div class="column is-1">
+                    <a href="/course?course_id={{course.id}}">all</a>
+                </div>
+        </div>
+        {% endif %}
         {% if create %}
         {% include './components/create_post.html' %}
         {% endif %}

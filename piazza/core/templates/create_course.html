@@ -1,6 +1,11 @@
 {% extends 'master.html' %}
 {% block body %}
 <h1 class="title">Create a Course</h1>
+<a href="/"> Go Home</a>
+</br>
+<a href="/logout"> Logout</a>
+</br>
+</br>
 <form method="POST" action="/create_course">
     {% csrf_token %}
     <div>
@@ -14,11 +19,15 @@
     <div>
         <input name="term" class="input is-primary" type="text" placeholder="Course Term">
     </div>
+    <div>
+        </br>
+        <label class="label">Type folder names separated by commas</label>
+        <input name="folders" class="input is-primary" type="text" placeholder="Folders">
+    </div>
     </br>
     <!-- https://select2.org/getting-started/basic-usage -->
     <div class="select is-multiple is-primary">
-        <label>Add Students</label>
-        </br>
+        <label class="label">Add Students</label>
         <select class="js-example-basic-multiple" name="students" multiple="multiple">
             {% for student in students %}
             <option value="{{student.id}}">{{student}}</option>
@@ -27,8 +36,7 @@
     </div>
     </br>
     <div class="select is-multiple is-primary">
-        <label>Add TAs</label>
-        </br>
+        <label class="label">Add TAs</label>
         <select class="js-example-basic-multiple" name="tas" multiple="multiple">
             {% for student in students %}
             <option value="{{student.id}}">{{student}}</option>

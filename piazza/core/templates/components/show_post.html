@@ -15,6 +15,15 @@
             {{post.content}}
         </div>
     </div>
+    <div class="card-footer">
+        <div class="card-footer-item" style="justify-content: flex-start">
+            <div class="columns">
+                {% for f in post.folder.all %}
+                <div class="column"><p>{{f.name}}</p></div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 </div>
 </br>
 {% if user in course.students.all %}
@@ -125,7 +134,7 @@
                 {% csrf_token %}
                 <input type="hidden" value="{{post.id}}" name="post_id">
                 <input type="hidden" value="{{course.id}}" name="course_id">
-                <label>Start a new followup discussion</label>
+                <label class="label">Start a new followup discussion</label>
                 <input class="input" type="text" name="followup" placeholder="Compose a new followup discussion">
                 <button type="submit" class="button is-primary">Post</button>
             </form>
