@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from core.models import Post, Course, Followup, Folder
 from django.contrib.auth.decorators import login_required
 
+
 def splash(request):
     if request.user.is_authenticated:
         print(Course.objects.all())
@@ -188,6 +189,7 @@ def add_student_answer(request):
     post.save()
     return render(request, 'course.html', {"course": course, "post": post})
 
+
 @login_required
 def folder(request):
     folder_id = request.GET.get("folder_id")
@@ -201,5 +203,51 @@ def folder(request):
     return render(request, 'course.html', {"course": course, "filter": True, "posts": posts})
 
 
+@login_required
+def manage(request):
+    course = Course.objects.get(id=request.GET["course_id"])
+    if request.user == course.instructor:
 
+        return render(request, 'manage.html', {"course": course, "course_students": course.students.all(),
+        "course_tas": course.ta_staff.all()})
+    return redirect("/")
+
+
+@login_required
+def remove_students(request):
+    if request.method == "POST":
+        print("REMOVING STUDENTS")
+        # https://stackoverflow.com/questions/618557/django-using-select-multiple-and-post
+        student_ids = request.POST.getlist("students")
+        # https://stackoverflow.com/questions/6337973/get-multiple-rows-with-one-query-in-django
+        students = User.objects.filter(id__in=student_ids)
+
+        course = Course.objects.get(id=request.POST.get("course_id"))
+
+        for student in students:
+            course.students.remove(student)
+            course.save()
+            student.delete()
+
+        return redirect("/course?course_id="+str(course.id))
+    return render(request, 'create_course.html', {"students": User.objects.all()})
+
+@login_required
+def remove_tas(request):
+    if request.method == "POST":
+        print("REMOVING TAS")
+        # https://stackoverflow.com/questions/618557/django-using-select-multiple-and-post
+        ta_ids = request.POST.getlist("tas")
+        # https://stackoverflow.com/questions/6337973/get-multiple-rows-with-one-query-in-django
+        tas = User.objects.filter(id__in=ta_ids)
+
+        course = Course.objects.get(id=request.POST.get("course_id"))
+
+        for ta in tas:
+            course.ta_staff.remove(ta)
+            course.save()
+            ta.delete()
+
+        return redirect("/course?course_id="+str(course.id))
+    return render(request, 'create_course.html', {"students": User.objects.all()})
 

@@ -1,0 +1,65 @@
+{% extends 'master.html' %}
+{% block body %}
+<h1 class="title">
+    Piazza v1.9.2
+</h1>
+<div>
+    <p class="subtitle">
+        <a href="/"> Go Home</a>
+        </br>
+        <a href="/course?course_id={{course.id}}"> Return to Course Page</a>
+        </br>
+        <a href="/logout"> Logout</a>
+        </br>
+        Welcome to the room where it happens! Manage your course here.
+    </p>
+    <div class="columns">
+
+        <div class="column">
+            <form method="POST" action="/remove_students">
+                {% csrf_token %}
+                </br>
+                <!-- https://select2.org/getting-started/basic-usage -->
+                <div class="select is-multiple is-primary">
+                    <label class="label">Remove Students</label>
+                    <select class="js-example-basic-multiple" name="students" multiple="multiple">
+                        {% for student in course_students %}
+                        <option value="{{student.id}}">{{student}}</option>
+                        
+                        {% endfor %}
+                        <input type="hidden" value="{{course.id}}" name="course_id">
+                    </select>
+                </div>
+                </br>
+                <button type="submit" class="button is-primary">Remove Students</button>
+            </form>
+        </div>
+        <div class="column">
+            <form method="POST" action="/remove_tas">
+                {% csrf_token %}
+                </br>
+                <!-- https://select2.org/getting-started/basic-usage -->
+                <div class="select is-multiple is-primary">
+                    <label class="label">Remove TAs</label>
+                    <select class="js-example-basic-multiple" name="tas" multiple="multiple">
+                        {% for ta in course_tas %}
+                        <option value="{{ta.id}}">{{ta}}</option>
+                        {% endfor %}
+                        <input type="hidden" value="{{course.id}}" name="course_id">
+                    </select>
+                </div>
+                </br>
+                <button type="submit" class="button is-primary">Remove TAs</button>
+            </form>
+        </div>
+    </div>
+
+    </br>
+    <div>
+        <h2>
+            DANGER ZONE
+            </br>
+            <a href="/delete_course?course_id={{course.id}}"> DELETE COURSE </a>
+        </h2>
+    </div>
+    {% endblock %}

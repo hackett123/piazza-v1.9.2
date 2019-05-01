@@ -17,6 +17,10 @@
         <a href="/"> Go Home</a>
         </br>
         <a href="/logout"> Logout</a>
+        {% if user == course.instructor %}
+        </br>
+        <a href="/manage?course_id={{course.id}}">Manage Course</a>
+        {% endif %}
     </p>
 </div>
 </br>
@@ -94,6 +98,7 @@
     </div>
     <div class="column featured">
         {% if course.course_folders %}
+        Filter posts by folders :
         <div class="columns">
             {% for f in course.course_folders.all %}
             <div class="column is-1">
@@ -101,8 +106,8 @@
             </div>
             {% endfor %}
             <div class="column is-1">
-                    <a href="/course?course_id={{course.id}}">all</a>
-                </div>
+                <a href="/course?course_id={{course.id}}">all</a>
+            </div>
         </div>
         {% endif %}
         {% if create %}
@@ -112,14 +117,5 @@
         {% include './components/show_post.html' %}
         {% endif %}
     </div>
-</div>
-<div>
-    <h2>
-        {% if user in course.ta_staff.all or user == course.instructor %}
-        DANGER ZONE
-        </br>
-        <a href="/delete_course?course_id={{course.id}}"> DELETE COURSE </a>
-        {% endif %}
-    </h2>
 </div>
 {% endblock %}
