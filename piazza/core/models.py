@@ -31,6 +31,8 @@ class Post(models.Model):
     good_questions = models.IntegerField(default=0)
     folder = models.ManyToManyField(Folder, related_name ="folder_posts", default=0)
     course = models.ForeignKey(Course, related_name="course_posts", on_delete=models.CASCADE, default=0)
+    instructor_answer = models.TextField(default="")
+    student_answer = models.TextField(default="")
     
     def __str__(self):
         return self.author.username + " posted : " + self.summary

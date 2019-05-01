@@ -1,0 +1,4 @@
+.post-list {
+    overflow-y: auto;
+    height: 75vh;
+}

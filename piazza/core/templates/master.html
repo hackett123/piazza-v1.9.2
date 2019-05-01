@@ -1,13 +1,14 @@
-{% load static %}
+
 <!DOCTYPE html>
 <html>
-
+{% load static %}
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Piazza v1.9.2</title>
     <link rel="stylesheet" href="https://unpkg.com/bulmaswatch/lumen/bulmaswatch.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+    <link type="text/css" rel="stylesheet" href="/static/style.css" />
 </head>
 
 <body>
@@ -16,8 +17,9 @@
             {% block body %}{% endblock %}
         </div>
     </section>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 </body>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
-<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+
 </html>

@@ -1,14 +1,123 @@
 <div class="post card">
     <header class="card-header">
         <p class="card-header-title">
-            {{post.summary}}
+            {% if post.is_question %}
+            question
+            {% else %}
+            note
+            {% endif %}
         </p>
         <p>{{post.created_at}}</p>
     </header>
     <div class="card-content">
         <div class="content">
+            <h1 class="title"> {{post.summary}}</h1>
             {{post.content}}
         </div>
+    </div>
+</div>
+</br>
+{% if user == course.student %}
+<div class="card">
+    <header class="card-header">
+        <p class="card-header-title">
+            the student's answer
+        </p>
+    </header>
+    <div class="card-content">
+        <div class="content">
+            {% if post.student_answer %}
+            {{post.student_answer}}
+            {% else %}
+            <form method="POST" action="/add_student_answer">
+                {% csrf_token %}
+                <input type="hidden" value="{{post.id}}" name="post_id">
+                <input type="hidden" value="{{course.id}}" name="course_id">
+                <input class="input" type="text" name="answer" placeholder="Compose your answer here">
+                <button type="submit" class="button is-primary">Submit</button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+    <div class="card-footer">
+        <div class="card-footer-item" style="justify-content: flex-start">
+            EDIT
+        </div>
+    </div>
+</div>
+</br>
+{% elif post.student_answer %}
+<div class="card">
+    <header class="card-header">
+        <p class="card-header-title">
+            the student's answer
+        </p>
+    </header>
+    <div class="card-content">
+        <div class="content">
+            {{post.student_answer}}
+        </div>
+    </div>
+</div>
+</br>
+{% endif %}
+{% if user == course.instructor %}
+<div class="card">
+    <header class="card-header">
+        <p class="card-header-title">
+            the instructor's answer
+        </p>
+    </header>
+    <div class="card-content">
+        <div class="content">
+            {% if post.instructor_answer %}
+            {{post.instructor_answer}}
+            {% else %}
+            <form method="POST" action="/add_instructor_answer">
+                {% csrf_token %}
+                <input type="hidden" value="{{post.id}}" name="post_id">
+                <input type="hidden" value="{{course.id}}" name="course_id">
+                <input class="input" type="text" name="answer" placeholder="Compose your answer here">
+                <button type="submit" class="button is-primary">Submit</button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+    <div class="card-footer">
+        <div class="card-footer-item" style="justify-content: flex-start">
+            EDIT
+        </div>
+    </div>
+</div>
+</br>
+{% elif post.instructor_answer %}
+<div class="card">
+    <header class="card-header">
+        <p class="card-header-title">
+            the instructor's answer
+        </p>
+    </header>
+    <div class="card-content">
+        <div class="content">
+            {{post.instructor_answer}}
+        </div>
+    </div>
+</div>
+</br>
+{% endif %}
+<div class="card">
+    <header class="card-header">
+        <p class="card-header-title">
+            followup discussions
+        </p>
+    </header>
+    <div class="card-content">
+        {% for followup in post.post_followups.all %}
+        <div class="content">
+            {{followup.content}}
+            By : {{followup.author}}
+        </div>
+        {% endfor %}
     </div>
     <div class="card-footer">
         <div class="card-footer-item" style="justify-content: flex-start">
@@ -21,11 +130,6 @@
                 <button type="submit" class="button is-primary">Post</button>
             </form>
         </div>
-        {% for followup in post.post_followups.all %}
-            <div class="card-footer-item" style="justify-content: flex-start">
-                {{followup.content}}
-                By : {{followup.author}}
-            </div>
-        {% endfor %}
     </div>
 </div>
+</br>
