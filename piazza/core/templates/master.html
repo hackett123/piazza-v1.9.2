@@ -21,7 +21,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
     <script>
-        function editFollowupModalClick(text) {
+        function editFollowupModalClick(followup_id, text) {
             $("#modal_body").append(`
             <form method="POST" action="/edit_followup" id="edit-form">
                 {% csrf_token %}
