@@ -3,6 +3,7 @@
     {% csrf_token %}
     <input type="hidden" value="{{course.id}}" name="course_id">
     <div class="control">
+        <label class="label">Post visibility</label>
         <label class="radio">
             <input type="radio" value="public" name="post_to" checked>
             Entire Class
@@ -13,13 +14,26 @@
         </label>
     </div>
     <div class="control">
-            {% for f in course.course_folders.all %}
-            <label class="checkbox">
-                <input type="checkbox" value="{{f.id}}" name="folders">
-                {{f.name}}
+            <label class="label">Post type</label>
+            <label class="radio">
+                <input type="radio" value="question" name="post_type" checked>
+                Question
             </label>
-            {% endfor %}
+            <label class="radio">
+                <input type="radio" value="note" name="post_type">
+                Note
+            </label>
         </div>
+    </br>
+    <div class="control">
+        <label class="label">Select folders</label>
+        {% for f in course.course_folders.all %}
+        <label class="checkbox">
+            <input type="checkbox" value="{{f.id}}" name="folders">
+            {{f.name}}
+        </label>
+        {% endfor %}
+    </div>
     </br>
     <div>
         <input name="summary" class="input is-primary" type="text" placeholder="Enter summary...">

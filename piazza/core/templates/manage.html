@@ -50,7 +50,7 @@
                     <label class="label">Add TAs</label>
                     <select class="js-example-basic-multiple" name="add_tas" multiple="multiple">
                         {% for ta in new_tas %}
-                        <option value="{{student.id}}">{{ta}}</option>
+                        <option value="{{ta.id}}">{{ta}}</option>
                         {% endfor %}
                     </select>
                 </div>

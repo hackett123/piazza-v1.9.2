@@ -25,7 +25,8 @@
                 {% endfor %}
                 {% if user == post.author %}
                 <div class="column">
-                    <button class="button is-primary" id="edit_post" onclick="editPostModalClick('{{post.content}}')">edit</button>
+                    <button class="button is-primary" id="edit_post"
+                        onclick="editPostModalClick('{{post.content}}')">edit</button>
                 </div>
                 {% endif %}
             </div>
@@ -33,6 +34,7 @@
     </div>
 </div>
 </br>
+{% if post.is_question %}
 {% if user in course.students.all %}
 <div class="card">
     <header class="card-header">
@@ -57,7 +59,8 @@
     </div>
     <div class="card-footer">
         <div class="card-footer-item" style="justify-content: flex-start">
-                <button class="button is-primary" id="edit_post" onclick="editStudentAnswerModalClick('{{post.student_answer}}')">edit</button>
+            <button class="button is-primary" id="edit_post"
+                onclick="editStudentAnswerModalClick('{{post.student_answer}}')">edit</button>
         </div>
     </div>
 </div>
@@ -90,7 +93,8 @@
             {{post.instructor_answer}}
             <div class="card-footer">
                 <div class="card-footer-item" style="justify-content: flex-start">
-                    <button class="button is-primary" id="edit_post" onclick="editInstructorAnswerModalClick('{{post.instructor_answer}}')">edit</button>
+                    <button class="button is-primary" id="edit_post"
+                        onclick="editInstructorAnswerModalClick('{{post.instructor_answer}}')">edit</button>
                 </div>
             </div>
             {% else %}
@@ -121,6 +125,7 @@
 </div>
 </br>
 {% endif %}
+{% endif %}
 <div class="card">
     <header class="card-header">
         <p class="card-header-title">
@@ -134,7 +139,8 @@
             By : {{followup.author}}
             {% if user == followup.author %}
             </br>
-            <button class="button is-primary" id="edit_followup" onclick="editFollowupModalClick('{{followup.id}}', '{{followup.content}}')">edit</button>
+            <button class="button is-primary" id="edit_followup"
+                onclick="editFollowupModalClick('{{followup.id}}', '{{followup.content}}')">edit</button>
             {% endif %}
         </div>
         {% endfor %}

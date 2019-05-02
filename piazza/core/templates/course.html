@@ -34,14 +34,12 @@
                     <button class="button is-primary" type="submit">New Post</button>
                 </form>
             </div>
-            <div class="column">
-                <input class="input is-primary" type="text" placeholder="Search...">
-            </div>
         </div>
         <div class="columns">
             <div class="column post-list">
                 {% if filter %}
                 {% for post in posts %}
+                {% if not post.is_private or user == course.instructor or user in course.ta_staff.all or post.author == user %}
                 <div class="post card">
                     <header class="card-header">
                         <p class="card-header-title">
@@ -65,9 +63,11 @@
                     </div>
                 </div>
                 </br>
+                {% endif %}
                 {% endfor %}
                 {% else %}
                 {% for post in course.course_posts.all %}
+                {% if not post.is_private or user == course.instructor or user in course.ta_staff.all or post.author == user %}
                 <div class="post card">
                     <header class="card-header">
                         <p class="card-header-title">
@@ -90,6 +90,7 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
                 </br>
                 {% endfor %}
                 {% endif %}

@@ -11,9 +11,17 @@ from django.http import HttpResponse
 def splash(request):
     if request.user.is_authenticated:
         print(Course.objects.all())
-        courses = [course for course in Course.objects.all() if request.user ==
-                   course.instructor or request.user in course.students.all() or request.user in course.ta_staff.all()]
-        return render(request, "home.html", {"user": request.user, "courses": courses})
+        ta_course_ids = request.user.TA_courses.all()
+        ta_courses = Course.objects.filter(id__in=ta_course_ids)
+
+        instructor_course_ids = request.user.instructor_courses.all()
+        instructor_courses = Course.objects.filter(id__in=instructor_course_ids)
+
+        student_course_ids = request.user.student_courses.all()
+        student_courses = Course.objects.filter(id__in=student_course_ids)
+        # courses = [course for course in Course.objects.all() if request.user ==
+        #            course.instructor or request.user in course.students.all() or request.user in course.ta_staff.all()]
+        return render(request, "home.html", {"user": request.user, "ta_courses": ta_courses, "instructor_courses": instructor_courses, "student_courses": student_courses})
     return render(request, "splash.html", {})
 
 
@@ -105,7 +113,8 @@ def create_post(request):
         content=request.POST["content"],
         is_private=request.POST.get("post_to") == "private",
         author=request.user,
-        course=course
+        course=course,
+        is_question=request.POST.get("post_type") == "question"
     )
     post.folder.set(folders)
     return redirect("/course?course_id="+str(course.id))
@@ -241,11 +250,9 @@ def update_course(request):
 
     for student in remove_students:
         course.students.remove(student)
-        student.delete()
 
     for ta in remove_tas:
         course.ta_staff.remove(ta)
-        ta.delete()
 
     for folder in remove_folders:
         folder.delete()

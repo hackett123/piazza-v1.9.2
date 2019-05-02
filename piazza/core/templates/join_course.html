@@ -6,6 +6,7 @@
     </br>
     <a href="/logout"> Logout</a>
 </p>
+</br>
 <form method="POST" action="/join_course">
     {% csrf_token %}
     <div class="select is-multiple is-primary">
@@ -15,6 +16,7 @@
             {% endfor %}
         </select>
     </div>
+    </br>
     </br>
     <button type="submit" class="button is-primary">Join</button>
 </form>

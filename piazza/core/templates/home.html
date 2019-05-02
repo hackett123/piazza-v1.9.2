@@ -1,16 +1,42 @@
 {% extends 'master.html' %}
 {% block body %}
 <h1 class="title">
-    Home Page for Piazza v1.9.2
+    Piazza v1.9.2
 </h1>
 
 <h2>You are currently logged in as <strong>{{user.first_name}}</strong></h2>
 </br>
-<h2>Your Courses : </h2>
+<h2 class="label">Student courses: </h2>
 <p>
-    {% for course in courses%}
+    {% if student_courses %}
+    {% for course in student_courses %}
     <a href="/course?course_id={{course.id}}">{{course}}</a></br>
     {%endfor%}
+    {% else %}
+    No courses
+    {% endif %}
+</p>
+</br>
+<h2 class="label">TA courses: </h2>
+<p>
+    {% if ta_courses %}
+    {% for course in ta_courses %}
+    <a href="/course?course_id={{course.id}}">{{course}}</a></br>
+    {%endfor%}
+    {% else %}
+    No courses
+    {% endif %}
+</p>
+</br>
+<h2 class="label">Instructor courses: </h2>
+<p>
+    {% if instructor_courses %}
+    {% for course in instructor_courses %}
+    <a href="/course?course_id={{course.id}}">{{course}}</a></br>
+    {%endfor%}
+    {% else %}
+    No courses
+    {% endif %}
 </p>
 </br>
 <h2>
