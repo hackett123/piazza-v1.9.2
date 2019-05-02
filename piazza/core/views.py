@@ -4,6 +4,9 @@ from django.contrib.auth.models import User
 from core.models import Post, Course, Followup, Folder
 from django.contrib.auth.decorators import login_required
 
+import csv
+from django.http import HttpResponse
+
 
 def splash(request):
     if request.user.is_authenticated:
@@ -329,3 +332,29 @@ def edit_student_answer(request):
     post.save()
     return redirect("/view_post?course_id="+str(course.id)+"&post_id="+str(post.id))
 
+#credit to https://docs.djangoproject.com/en/2.2/howto/outputting-csv/ for help
+@login_required
+def export_course(request):
+    course = Course.objects.get(id=request.GET.get("course_id"))
+    students = course.students.all()
+    tas = course.ta_staff.all()
+    posts = course.course_posts.all()
+
+    # Create the HttpResponse object with the appropriate CSV header.
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename='+str(course)+'.csv'
+    writer = csv.writer(response)
+
+    writer.writerow(["Student First Name", "Student Last Name", "Student Username", "Student Email"])
+    for student in students:
+        writer.writerow([student.first_name,student.last_name,student.username,student.email])
+
+    writer.writerow(["TA First Name", "TA Last Name", "TA Username", "TA Email"])
+    for ta in students:
+        writer.writerow([ta.first_name,ta.last_name,ta.username,ta.email])
+    
+    writer.writerow(["Post Author", "Post Date", "Post Summary", "Post Content", "Post Privacy", "Folders", "Instructor Answer", "Student Answer"])
+    for post in posts:
+        writer.writerow([post.author,post.created_at,post.summary,post.content,post.is_private,post.folders,post.instructor_answer,post.student_answer])
+    
+    return response

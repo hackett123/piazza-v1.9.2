@@ -37,7 +37,13 @@ class Post(models.Model):
     
     def __str__(self):
         return self.author.username + " posted : " + self.summary
+    
+    def __dir__(self):
+        return "id, created_at, summary, content, author, is_question, is_private, good_questions, folder, course, instructor_answer, student_answer"
 
+
+    # def __getattr__(self, name):
+    #     return name
 
 class Followup(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
