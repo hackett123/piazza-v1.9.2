@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from core.models import Post, Course, Followup, Folder
 from django.contrib.auth.decorators import login_required
 
-import csv
+import csv, time
 from django.http import HttpResponse
 
 
@@ -250,9 +250,17 @@ def update_course(request):
 
     for student in remove_students:
         course.students.remove(student)
+<<<<<<< HEAD
 
     for ta in remove_tas:
         course.ta_staff.remove(ta)
+=======
+        #student.delete()
+
+    for ta in remove_tas:
+        course.ta_staff.remove(ta)
+        #ta.delete()
+>>>>>>> b2e3f9c0cc96adf33772333e00c79f0806cf3b6f
 
     for folder in remove_folders:
         folder.delete()
@@ -347,9 +355,12 @@ def export_course(request):
     tas = course.ta_staff.all()
     posts = course.course_posts.all()
 
-    # Create the HttpResponse object with the appropriate CSV header.
+    
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename='+str(course)+'.csv'
+
+    # https://www.tutorialspoint.com/python/python_date_time.htm
+    t = str(time.strftime("%b %d %Y %H:%M:%S", time.localtime()))
+    response['Content-Disposition'] = 'attachment; filename='+str(course)+'_'+t+'.csv'
     writer = csv.writer(response)
 
     writer.writerow(["Student First Name", "Student Last Name", "Student Username", "Student Email"])
@@ -360,8 +371,8 @@ def export_course(request):
     for ta in students:
         writer.writerow([ta.first_name,ta.last_name,ta.username,ta.email])
     
-    writer.writerow(["Post Author", "Post Date", "Post Summary", "Post Content", "Post Privacy", "Folders", "Instructor Answer", "Student Answer"])
+    writer.writerow(["Post Author", "Post Date", "Post Summary", "Post Content", "Post Privacy", "Instructor Answer", "Student Answer"])
     for post in posts:
-        writer.writerow([post.author,post.created_at,post.summary,post.content,post.is_private,post.folders,post.instructor_answer,post.student_answer])
+        writer.writerow([post.author,post.created_at,post.summary,post.content,post.is_private,post.instructor_answer,post.student_answer])
     
     return response
