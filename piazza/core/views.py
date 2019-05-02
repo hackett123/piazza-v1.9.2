@@ -250,17 +250,9 @@ def update_course(request):
 
     for student in remove_students:
         course.students.remove(student)
-<<<<<<< HEAD
 
     for ta in remove_tas:
         course.ta_staff.remove(ta)
-=======
-        #student.delete()
-
-    for ta in remove_tas:
-        course.ta_staff.remove(ta)
-        #ta.delete()
->>>>>>> b2e3f9c0cc96adf33772333e00c79f0806cf3b6f
 
     for folder in remove_folders:
         folder.delete()
