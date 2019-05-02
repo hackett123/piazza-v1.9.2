@@ -29,6 +29,9 @@
                         onclick="editPostModalClick('{{post.content}}')">edit</button>
                 </div>
                 {% endif %}
+                <div class="column">
+                    <p class="label">{{post.author}}</p>
+                </div>
             </div>
         </div>
     </div>
@@ -58,9 +61,16 @@
         </div>
     </div>
     <div class="card-footer">
-        <div class="card-footer-item" style="justify-content: flex-start">
-            <button class="button is-primary" id="edit_post"
-                onclick="editStudentAnswerModalClick('{{post.student_answer}}')">edit</button>
+        <div class="columns">
+            <div class="column">
+                <div class="card-footer-item" style="justify-content: flex-start">
+                    <button class="button is-primary" id="edit_post"
+                        onclick="editStudentAnswerModalClick('{{post.student_answer}}')">edit</button>
+                </div>
+            </div>
+            <div class="column">
+                <p class="label">{{post.author}}</p>
+            </div>
         </div>
     </div>
 </div>
@@ -135,9 +145,10 @@
     <div class="card-content">
         {% for followup in post.post_followups.all %}
         <div class="content">
+            <p class="label">{{followup.author}}</p>
             {{followup.content}}
-            By : {{followup.author}}
             {% if user == followup.author %}
+            </br>
             </br>
             <button class="button is-primary" id="edit_followup"
                 onclick="editFollowupModalClick('{{followup.id}}', '{{followup.content}}')">edit</button>
@@ -153,6 +164,8 @@
                 <input type="hidden" value="{{course.id}}" name="course_id">
                 <label class="label">Start a new followup discussion</label>
                 <input class="input" type="text" name="followup" placeholder="Compose a new followup discussion">
+                </br>
+                </br>
                 <button type="submit" class="button is-primary">Post</button>
             </form>
         </div>
